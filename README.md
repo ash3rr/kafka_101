@@ -19,14 +19,33 @@ When a table grows larger, we shard. (called partitions in kafka)
 
 So, producers and consumers need to specify a topic, partition and position. 
 
-#Queue vs Pub Sub
+## Queue vs Pub Sub
 
 Queue: Message is published once, and then consumed once. Good for job execution. Jobs won't be executed twice.
 Pub sub: Published once, but consumed many times. (It isn't removed from the source). 
 
-Kafka asks, how can we do both.
+### Kafka asks, how can we do both.
 Answer: Consumer group 
 It removes the awareness of the partition from the user. 
 By default it acts like a queue.
 You create a consumer, add it to a group, it will consume all content from that topic, and either all partitions (if there is only one consumer) or the partitions will be split amongst the number of consumers in the group. (up to the limit of partitions).
+Content from that partition will only be visible to consumers that match the partition.
+To act like pub/sub, put each consumer in a unique group.
 
+### Result: we get parallel processing for free
+
+## Distributed Systems
+
+In a system with multiple brokers, there is the abstraction of a leader and a follower.
+You can write to a leader, but not a follower. A follower is for reading.
+
+Topics are replicated to both machines, but the partition is only designated to be a leader on machine 1, and a follower on machine 2.
+
+The zookeeper herds the 'cats' to the appropriate leader.
+
+## how to spin up zookeeper and kafka (using docker obviously)
+
+open terminal:
+docker run --name zookeeper  -p 2181:2181 -d zookeeper
+
+docker run -p 9092:9092 --name kafka  -e KAFKA_ZOOKEEPER_CONNECT=localhost:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 -d confluentinc/cp-kafka 
