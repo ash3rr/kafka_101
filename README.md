@@ -55,7 +55,7 @@ shell into your kafka:
 nav to folder:
 `cd opt/kafka/bin`
 
-in this folder is a list of kafka topics, to create a new topic run this command:
+in this folder is a list of kafka shell scripts, to create a new topic run this command:
 `kafka-topic.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic first_kafka_topic`
 
 to list topics:
@@ -65,4 +65,57 @@ to list topics:
 Note: I tried to spin up my docker environment with the below commands but I could not resolve the hostname of my machine. (docker compose was my way around this)
 `docker run --name zookeeper  -p 2181:2181 -d zookeeper`
 `docker run -p 9092:9092 --name kafka  -e KAFKA_ZOOKEEPER_CONNECT=localhost:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 -d confluentinc/cp-kafka`
+
+
+## How to connect visual studio code to docker
+
+Install docker extension
+Under containers right click and click attach to visual studio code
+You can also attach shell in the same way
+
+## Kafka Shell Commands
+
+Kafka Topics: Create, list, describe, delete
+Kafka Producers: send data to topic
+Kafka consumers: read data from topic
+
+Create another topic in the shell:
+`kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic dummy_topic`
+
+List the topics:
+`kafka-topics.sh --list --zookeeper zookeeper:2181`
+
+List info on topic:
+`kafka-topics.sh --describe --zookeeper zookeeper:2181 --topic dummy_topic`
+
+Delete a topic:
+`kafka-topics.sh --delete --zookeeper zookeeper:2181 --topic dummy_topic`
+
+Create a new message topic:
+`kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic messages`
+
+`kafka-console-producer.sh --broker-list kafka:9092 --topic messages`
+
+`{'user_id': 1, 'recipient_id':2, 'message': 'Hi.'}
+{'user_id': 2, 'recipient_id':1, 'message': 'Hello there.'}`
+
+Ctrl-c to escape.
+
+Open consumer to read messages:
+New terminal window > `docker exec -it kafka /bin/sh` 
+`cd opt/kafka/bin`
+`kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic messages`
+
+It will not show existing messages, but only new ones that arrive, so add another message on the producer and it will appear in the consumer console:
+
+`kafka-console-producer.sh --broker-list kafka:9092 --topic messages`
+`{'user_id': 1, 'recipient_id':2, 'message': 'Hi.'}
+{'user_id': 2, 'recipient_id':1, 'message': 'Hello there.'}`
+
+To list all messages:
+`kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic messages --from-beginning`
+
+
+
+
 
