@@ -47,22 +47,22 @@ The zookeeper herds the 'cats' to the appropriate leader.
 
 open terminal:
 
-and run: docker compose -f docker-compose.yml up -d 
+and run: `docker compose -f docker-compose.yml up -d`
 
 shell into your kafka:
-docker exec -it kafka /bin/sh 
+`docker exec -it kafka /bin/sh `
 
 nav to folder:
-cd opt/kafka/bin
+`cd opt/kafka/bin`
 
 in this folder is a list of kafka topics, to create a new topic run this command:
-kafka-topic.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic first_kafka_topic
+`kafka-topic.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic first_kafka_topic`
 
 to list topics:
-kafka-topic.sh --list --zookeeper zookeeper:2181 
+`kafka-topic.sh --list --zookeeper zookeeper:2181`
 
 
 Note: I tried to spin up my docker environment with the below commands but I could not resolve the hostname of my machine. (docker compose was my way around this)
-docker run --name zookeeper  -p 2181:2181 -d zookeeper
-docker run -p 9092:9092 --name kafka  -e KAFKA_ZOOKEEPER_CONNECT=localhost:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 -d confluentinc/cp-kafka 
+`docker run --name zookeeper  -p 2181:2181 -d zookeeper`
+`docker run -p 9092:9092 --name kafka  -e KAFKA_ZOOKEEPER_CONNECT=localhost:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://localhost:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 -d confluentinc/cp-kafka`
 
