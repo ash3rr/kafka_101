@@ -1,11 +1,51 @@
 # kafka_101
 
+Real-time event streaming at a global scale, with persistent storage and stream processing instead of ad-hoc queries like in a relational database. 
+
+>It's a distributed log.
+
+We can grab those events from anywhere and integrate them anywhere. 
+
+### Motivation
+
+There are things that happen in the world and its our job to process those events. 
+
+This leads to:
+Single platform to connect everyone to every event. Not just a file system to store things.
+
+Real-time stream of events.
+
+All events stored for historical view.
+
+#### Use Cases:
+Event driven architecture. 
+The paradigm shift is from static snapshots of data to a continuous stream of events. 
+
+Eg., An occasional call from a friend > a constant feed about the activities of all your friends.
+
+Daily news report > Real time news feeds, accessible online anytime, anywhere. 
+
+
 Kafka is not made for ad-hoc queries, it is made for quick inserts and reads.
+
+### Zookeeper
+Cluster management
+Failure detection and recovery
+Store ACLS and secrets
+
 
 Kafka is composed of the broker. It listens for connections (port 9092) 
 We have the producer, which produces content, and consumer which consumes content from the broker.
 
 There is a connection from the producer to the broker, it is bi-directional. (TCP)
+
+### topics
+Streams of related messages/events.
+Logical representation.
+Categorises messages into groups.
+Developers define topics.
+Unlimited number of topics.
+Producer <> topic: N to N relation.
 
 Topics are logical partitions that you write content to. A producer has to specify which topic it wants to write to.
 Consumers specify which topic they want to consume.
@@ -18,6 +58,7 @@ When you consume, it will read sequentially from position zero.
 When a table grows larger, we shard. (called partitions in kafka)
 
 So, producers and consumers need to specify a topic, partition and position. 
+
 
 ## Queue vs Pub Sub
 
@@ -115,7 +156,13 @@ It will not show existing messages, but only new ones that arrive, so add anothe
 To list all messages:
 `kafka-console-consumer.sh --bootstrap-server kafka:9092 --topic messages --from-beginning`
 
+## Consumers and producers in Python
 
+Install kafka python
+`python3 -m pip install kafka-python`
 
+`touch data_generator.py`
+`touch producer.py`
+`touch consumer.py`
 
 
