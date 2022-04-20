@@ -47,11 +47,16 @@ Developers define topics.
 Unlimited number of topics.
 Producer <> topic: N to N relation.
 
+A topic is basically a log. (technically a partition is a log)
+A topic can have partitions, within a partition you have multiple segments. (like a rolling file) these partitions can then be allocated to different brokers, which enables us to scale out read/write performance. 
+
+Partition location is handled automatically by Kafka.
+
+A segment exists on physical disk as a file (a bunch of them actually).
+
 Topics are logical partitions that you write content to. A producer has to specify which topic it wants to write to.
 Consumers specify which topic they want to consume.
-
-You can only append data to kafka, not delete.
-The position is also specified when you append data.
+You can only add to the end of the log. 
 
 When you consume, it will read sequentially from position zero. 
 
@@ -59,6 +64,27 @@ When a table grows larger, we shard. (called partitions in kafka)
 
 So, producers and consumers need to specify a topic, partition and position. 
 
+## Data Structure
+
+Every event is a key value pair. 
+Every message has a timestamp.
+Optional headers. (metadata).
+
+## Brokers
+Brokers manage partitions.
+It does storage and pub/sub.
+
+Producers send messages to brokers.
+Brokers receive and store messages.
+Kafka cluster can have many brokers.
+Each broker manages multiple partitions.
+
+### broker replication
+
+Each partition is replicated a configurable number of times on other brokers.
+The replication factor is typically 3.
+One of these is called the leader, the others the followers. 
+>When you produce, you do so to the leader
 
 ## Queue vs Pub Sub
 
